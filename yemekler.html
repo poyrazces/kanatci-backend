@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Menü | Kanatçı Servet</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: url('kanatciarkaplan2.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      padding: 40px 20px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: -1;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 40px;
+    }
+
+    section {
+      margin-bottom: 60px;
+    }
+
+    section h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      border-bottom: 2px solid #ee860d;
+      padding-bottom: 6px;
+      width: 100%;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .menu-card {
+      position: relative;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.85);
+      border-radius: 15px;
+      color: white;
+      min-height: 50px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+    }
+
+    .menu-card.with-bg {
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    .menu-card .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+      border-radius: 15px;
+    }
+
+    .menu-card .menu-name,
+    .menu-card .price-circle {
+      position: relative;
+      z-index: 2;
+    }
+
+    .menu-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .price-circle {
+      background: #ee860d;
+      color: rgb(244, 239, 239);
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 16px;
+      min-width: 60px;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .logo-container img {
+      width: 120px;
+      height: auto;
+      border-radius: 50%;
+    }
+
+    .back-home-btn {
+      display: block;
+      width: fit-content;
+      margin: 60px auto 0;
+      padding: 12px 24px;
+      background-color: #ee860d;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 30px;
+      transition: background 0.3s ease;
+    }
+
+    .back-home-btn:hover {
+      background-color: #cc6e00;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo-container">
+    <img src="kanatcilogo.svg" alt="Kanatçı Servet Logo">
+  </div>
+
+  <h1>Kanatçı Servet Menü</h1>
+
+  <!-- 🍗 Yemekler -->
+  <section>
+    <h2>YEMEKLER</h2>
+    <div id="yemekler-container" class="menu-grid"></div>
+  </section>
+
+  <!-- 🍟 Yan Ürünler & Tatlılar -->
+  <section>
+    <h2>YAN ÜRÜNLER VE TATLILAR</h2>
+    <div id="yanurunler-container" class="menu-grid"></div>
+  </section>
+
+  <!-- 🥤 İçecekler -->
+  <section>
+    <h2>İÇECEKLER</h2>
+    <div id="icecekler-container" class="menu-grid"></div>
+  </section>
+
+  <a href="index.html" class="back-home-btn">← Ana Sayfaya Dön</a>
+
+  <script>
+    const API_URL = "http://localhost:5000/api/products";
+    const containerMap = {
+      "Yemekler": "yemekler-container",
+      "İçecekler": "icecekler-container",
+      "Yan Ürünler & Tatlılar": "yanurunler-container"
+    };
+
+    function createMenuCard(product) {
+      const card = document.createElement("div");
+      card.className = "menu-card";
+
+      const name = document.createElement("div");
+      name.className = "menu-name";
+      name.textContent = product.name;
+
+      const price = document.createElement("div");
+      price.className = "price-circle";
+      price.textContent = `₺${product.price}`;
+
+      card.appendChild(name);
+      card.appendChild(price);
+      return card;
+    }
+
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(product => {
+          const containerId = containerMap[product.category];
+          if (containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+              container.appendChild(createMenuCard(product));
+            }
+          }
+        });
+      })
+      .catch(err => console.error("❌ Veri çekme hatası:", err));
+  </script>
+
+</body>
+</html>

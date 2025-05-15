@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kanatçı Servet Menü</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+    }
+    body, html {
+      height: 100%;
+      overflow: hidden;
+    }
+    .video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+      object-fit: cover;
+    }
+    .content {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.4);
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 6px black;
+    }
+    h3 {
+      font-weight: 400;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 4px black;
+    }
+    .content {
+    padding-top: 50px; /* Veya 280px - ihtiyaca göre oyna */
+    }
+    .btn {
+        width: 200px;
+        text-align: center;
+        background-color: #ff6600;
+        border: none;
+        padding: 15px 0;
+        margin: 10px auto;
+        color: white;
+        font-size: 16px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: block;
+        }
+    .btn:hover {
+      background-color: #EE860D;
+    }
+    .social-links {
+    position: absolute;
+    bottom: 80px; /* daha aşağıda */
+    display: flex;
+    gap: 24px; /* ikonlar arası boşluk */
+    justify-content: center;
+    width: 100%;
+    }
+    .social-links i {
+    margin-right: 0px;
+    font-size: 20px;
+    vertical-align: middle;
+    }
+    .social-links a {
+    display: inline-flex;
+    align-items: center;
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    gap: 6px;
+    }
+    .whatsapp {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+    }
+    .whatsapp a {
+        background-color: #25d366;
+        color: white;
+        padding: 8px 14px;
+        font-size: 14px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 6px black;
+        }
+    .logo {
+        width: 250px;
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.7));
+        z-index: 1;
+        }
+            @media (max-width: 600px) {
+        .logo {
+            width: 220px;
+            top: 20px;
+        }
+        }
+
+            #preloader {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    }
+
+    .preloader-logo {
+    width: 280px;
+    animation: fadeIn 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes fadeIn {
+    from { opacity: 0.4; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+    }
+
+
+  </style>
+</head>
+<body>
+
+        <div id="preloader">
+    <img src="hosgeldinizkanatci.svg" alt="Logo" class="preloader-logo" />
+    </div>
+
+  <img src="kanatcilogo2.svg" alt="Logo" class="logo" />
+
+  <video class="video-bg" autoplay muted loop>
+    <source src="menüvideo.mp4" type="video/mp4">
+    Tarayıcınız video etiketini desteklemiyor.
+  </video>
+
+  <div class="content">
+    <h1>Kanatçı Servet</h1>
+    <h3>Lezzetiyle Akılda Kalan Mekan</h3>
+
+    <button class="btn" onclick="location.href='yemekler.html'"> MENÜ </button>
+    <button class="btn" onclick="window.open('https://goo.gl/maps/xyz', '_blank')">YOL TARİFİ</button>
+
+    <div class="social-links">
+    <a href="https://www.instagram.com/kanatciservet/" target="_blank">
+        <i class="fab fa-instagram"></i> Instagram
+    </a>
+    <a href="https://facebook.com/kanatciservet" target="_blank">
+        <i class="fab fa-facebook-square"></i> Facebook
+    </a>
+    </div>
+
+    <!-- <div class="whatsapp">
+      <a href="https://wa.me/905XXXXXXXXX" target="_blank">WhatsApp’tan İletişime Geç</a>
+    </div>
+  </div>-->
+
+  <script>
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      document.getElementById("preloader").style.display = "none";
+      document.getElementById("content").style.display = "block";
+    }, 1500); // 2 saniye beklet
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Giriş | Kanatçı Servet</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('kanatciarkaplan2.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-box h1 {
+      margin-bottom: 25px;
+      font-size: 24px;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .login-box button {
+      background-color: #ee860d;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .login-box button:hover {
+      background-color: #cc6e00;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <h1>Admin Panel Girişi</h1>
+    <input type="text" id="usernameInput" placeholder="Kullanıcı Adı" />
+    <input type="password" id="passwordInput" placeholder="Şifre" />
+    <button onclick="login()">Giriş Yap</button>
+    <div class="error" id="errorText">Kullanıcı adı veya şifre hatalı!</div>
+  </div>
+
+  <script>
+    function login() {
+      const username = document.getElementById("usernameInput").value.trim();
+      const password = document.getElementById("passwordInput").value.trim();
+      const errorText = document.getElementById("errorText");
+
+      const correctUsername = "admin";
+      const correctPassword = "admin";
+
+      if (username === correctUsername && password === correctPassword) {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "dashboard.html";
+      } else {
+        errorText.style.display = "block";
+      }
+    }
+  </script>
+
+</body>
+</html>

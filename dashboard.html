@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <style>
+    body {
+      background: #111;
+      font-family: Arial, sans-serif;
+      color: white;
+      padding: 20px;
+      margin: 0;
+    }
+    h1 {
+      text-align: center;
+      color: #ee860d;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      background: #1e1e1e;
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto 40px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group select,
+    .form-group input,
+    .form-group button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    .form-group button {
+      background-color: #ee860d;
+      color: white;
+      cursor: pointer;
+    }
+    .form-group button:hover {
+      background-color: #cc6e00;
+    }
+    table {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+    td button {
+      margin-right: 6px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .edit-btn {
+      background: #2196f3;
+      color: white;
+    }
+    .delete-btn {
+      background: #e53935;
+      color: white;
+    }
+    .category-title {
+      max-width: 900px;
+      margin: 40px auto 10px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #ffb84d;
+      border-bottom: 2px solid #444;
+      padding-bottom: 4px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      background-color: #1e1e1e;
+      margin: 100px auto;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-content input {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 15px;
+    }
+    .modal-content button {
+      padding: 10px;
+      background: #ee860d;
+      color: white;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .modal-content button:hover {
+      background: #cc6e00;
+    }
+    .modal-content label {
+      text-align: left;
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #ccc;
+    }
+    @media (max-width: 600px) {
+      table, th, td {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Ürün Yönetimi</h1>
+  <div class="form-group">
+    <label for="categorySelect">Kategori</label>
+    <select id="categorySelect">
+      <option value="Yemekler">Yemekler</option>
+      <option value="İçecekler">İçecekler</option>
+      <option value="Yan Ürünler & Tatlılar">Yan Ürünler & Tatlılar</option>
+    </select>
+    <label for="productName">Ürün Adı</label>
+    <input type="text" id="productName" placeholder="Ürün Adı">
+    <label for="productPrice">Fiyat</label>
+    <div style="position: relative;">
+      <input type="number" id="productPrice" placeholder="₺" style="padding-right: 30px;" />
+      <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #888;">₺</span>
+    </div>
+    <button onclick="addProduct()">Ürünü Kaydet</button>
+  </div>
+  <div id="productListContainer"></div>
+  <div id="updateModal" class="modal">
+    <div class="modal-content">
+      <label for="updateName">Ürün Adı</label>
+      <input type="text" id="updateName" placeholder="Yeni Ürün Adı">
+      <label for="updatePrice">Ürün Fiyatı</label>
+      <div style="position: relative;">
+        <input type="number" id="updatePrice" placeholder="₺" style="padding-right: 30px;" />
+        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #888;">₺</span>
+      </div>
+      <button onclick="saveUpdate()">Kaydet</button>
+    </div>
+  </div>
+  <script>
+    let editingId = null;
+
+    function addProduct() {
+      const category = document.getElementById("categorySelect").value;
+      const name = document.getElementById("productName").value.trim();
+      const price = document.getElementById("productPrice").value.trim();
+      if (!name || !price) {
+        alert("Lütfen ürün adı ve fiyat gir.");
+        return;
+      }
+      fetch("http://localhost:5000/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, price: Number(price), category })
+      })
+      .then(res => res.json())
+      .then(() => {
+        alert("✅ Ürün başarıyla eklendi");
+        getAndRenderProducts();
+        document.getElementById("productName").value = "";
+        document.getElementById("productPrice").value = "";
+      });
+    }
+
+    function getAndRenderProducts() {
+      fetch("http://localhost:5000/api/products")
+      .then(res => res.json())
+      .then(products => {
+        const grouped = {};
+        products.forEach(p => {
+          if (!grouped[p.category]) grouped[p.category] = [];
+          grouped[p.category].push(p);
+        });
+        let html = "";
+        for (const cat in grouped) {
+          html += `<div class="category-title">${cat}</div>`;
+          html += `<table><thead><tr><th>Ürün Adı</th><th>Fiyat</th><th>İşlem</th></tr></thead><tbody>`;
+          grouped[cat].forEach(p => {
+            html += `<tr>
+              <td>${p.name}</td>
+              <td>₺${p.price}</td>
+              <td>
+                <button class="edit-btn" onclick="editProduct('${p._id}', '${p.name}', ${p.price})">Güncelle</button>
+                <button class="delete-btn" onclick="deleteProduct('${p._id}')">Sil</button>
+              </td>
+            </tr>`;
+          });
+          html += `</tbody></table>`;
+        }
+        document.getElementById("productListContainer").innerHTML = html;
+      });
+    }
+
+    function deleteProduct(id) {
+      if (!confirm("Bu ürünü silmek istediğine emin misin?")) return;
+      fetch(`http://localhost:5000/api/products/${id}`, {
+        method: "DELETE"
+      })
+      .then(res => res.json())
+      .then(() => {
+        alert("🗑️ Silindi");
+        getAndRenderProducts();
+      });
+    }
+
+    function editProduct(id, name, price) {
+      editingId = id;
+      document.getElementById("updateName").value = name;
+      document.getElementById("updatePrice").value = price;
+      document.getElementById("updateModal").style.display = "block";
+    }
+
+    function saveUpdate() {
+      const newName = document.getElementById("updateName").value.trim();
+      const newPrice = document.getElementById("updatePrice").value.trim();
+      if (!newName || !newPrice) {
+        alert("Boş bırakma reis.");
+        return;
+      }
+      fetch(`http://localhost:5000/api/products/${editingId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName, price: Number(newPrice) })
+      })
+      .then(res => res.json())
+      .then(() => {
+        alert("✅ Güncelleme başarılı");
+        getAndRenderProducts();
+        document.getElementById("updateModal").style.display = "none";
+      });
+    }
+
+    window.onclick = function(e) {
+      if (e.target === document.getElementById("updateModal")) {
+        document.getElementById("updateModal").style.display = "none";
+      }
+    }
+
+    getAndRenderProducts();
+  </script>
+</body>
+</html>
