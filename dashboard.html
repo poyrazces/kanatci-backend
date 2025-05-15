@@ -152,7 +152,9 @@
     </div>
     <button onclick="addProduct()">Ürünü Kaydet</button>
   </div>
+
   <div id="productListContainer"></div>
+
   <div id="updateModal" class="modal">
     <div class="modal-content">
       <label for="updateName">Ürün Adı</label>
@@ -165,6 +167,7 @@
       <button onclick="saveUpdate()">Kaydet</button>
     </div>
   </div>
+
   <script>
     let editingId = null;
 
@@ -176,7 +179,7 @@
         alert("Lütfen ürün adı ve fiyat gir.");
         return;
       }
-      fetch("http://localhost:5000/api/products", {
+      fetch("https://kanatci-backend.onrender.com/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, price: Number(price), category })
@@ -191,7 +194,7 @@
     }
 
     function getAndRenderProducts() {
-      fetch("http://localhost:5000/api/products")
+      fetch("https://kanatci-backend.onrender.com/api/products")
       .then(res => res.json())
       .then(products => {
         const grouped = {};
@@ -221,7 +224,7 @@
 
     function deleteProduct(id) {
       if (!confirm("Bu ürünü silmek istediğine emin misin?")) return;
-      fetch(`http://localhost:5000/api/products/${id}`, {
+      fetch(`https://kanatci-backend.onrender.com/api/products/${id}`, {
         method: "DELETE"
       })
       .then(res => res.json())
@@ -245,7 +248,7 @@
         alert("Boş bırakma reis.");
         return;
       }
-      fetch(`http://localhost:5000/api/products/${editingId}`, {
+      fetch(`https://kanatci-backend.onrender.com/api/products/${editingId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newName, price: Number(newPrice) })
